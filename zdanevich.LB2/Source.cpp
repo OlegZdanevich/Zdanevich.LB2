@@ -2,9 +2,9 @@
 
 using namespace std;
 
-double** AllocMatrix(int );
-double CosMy(double ,double);
-double Sum(double**, int);
+double** AllocMatrix(int);
+double** Difference(double**, double**, int);
+double CosMy(double, double);
 void FillMatrixMyFunction(double**, int, double);
 void FillMatrixNotMyFunction(double**, int);
 void DisplayMatrix(double**, int);
@@ -32,19 +32,22 @@ int main()
 		cin >> eps;
 		system("cls");
 		FillMatrixMyFunction(a, n, eps);
-		DisplayMatrix(a, n);
 		cout << endl << "With my function" << endl << endl;
-		double **b = AllocMatrix(n);
-		FillMatrixNotMyFunction(b,n);
-		DisplayMatrix(b, n);
+		DisplayMatrix(a, n);
+		cout << endl << endl << "*******************************************************************************" << endl << endl;
 		cout << endl << "Without my function" << endl << endl;
-		double sum1 = Sum(a, n);
-		double sum2 = Sum(b, n);
-		cout << "Sum of fist one " << sum1 << endl;
-		cout << "Sum of second one " << sum2 << endl;
+		double **b = AllocMatrix(n);
+		FillMatrixNotMyFunction(b, n);
+		DisplayMatrix(b, n);
+		cout << endl << endl << "*******************************************************************************" << endl << endl;
+		cout << endl << "difference" << endl << endl;
+		double **c = Difference(a, b, n);
+		DisplayMatrix(c, n);
 		system("pause");
 		system("cls");
 		ClearMemory(a, n);
+		ClearMemory(b, n);
+		ClearMemory(c, n);
 		char s;
 		cout << "Would you like to countinie? " << endl;
 		cout << "Yes- y or Y " << endl;
@@ -70,34 +73,35 @@ double** AllocMatrix(int n)
 	return a;
 }
 
+double** Difference(double**a, double**b, int n)
+{
+	double **c = AllocMatrix(n);
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			c[i][j] = a[i][j] - b[i][j];
+		}
+	}
+	return c;
+}
 
 double CosMy(double x, double eps)
 {
 	double sum = 0;
 	double an = 1;
-	int n=0;
+	int n = 0;
 	while (fabs(an)>eps)
 	{
 		sum += an;
 		n++;
-		an *= -x*x / (2*n - 1) / (2*n);
+		an *= -x*x / (2 * n - 1) / (2 * n);
 	}
 	return sum;
 }
 
-double Sum(double**a, int n)
-{
-	double sum = 0;
-	for (int i = 0; i < n; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			sum += a[i][j];
-		}
-	}
-	return sum;
-}
-void FillMatrixMyFunction(double **a, int n,double eps)
+
+void FillMatrixMyFunction(double **a, int n, double eps)
 {
 	for (int i = 0; i < n; i++)
 	{
@@ -105,9 +109,9 @@ void FillMatrixMyFunction(double **a, int n,double eps)
 		{
 			if (j != i)
 			{
-				a[i][j]=(pow(i + j, 2) - CosMy(2 * i, eps) + CosMy(2 * j, eps)) / (CosMy(i + j, eps) + pow(i + 1, 2));
+				a[i][j] = (pow(i + j, 2) - CosMy(2 * i, eps) + CosMy(2 * j, eps)) / (CosMy(i + j, eps) + pow(i + 1, 2));
 			}
-			else a[i][j] = 2*i;
+			else a[i][j] = 2 * i;
 		}
 	}
 }
@@ -136,6 +140,8 @@ void DisplayMatrix(double**a, int n)
 		for (int j = 0; j < n; j++)
 		{
 			cout << a[i][j] << " ";
+			if (j < n - 1) cout.width(20);
+			if(i==j&& i==0)cout.width(32);
 		}
 		cout << endl;
 
